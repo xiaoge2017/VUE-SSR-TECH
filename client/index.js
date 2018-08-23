@@ -7,6 +7,7 @@ import App from './app.vue'
 import './assets/styles/global.styl'
 import createStore from './store/store'
 import createRouter from './config/router'
+// import mutations from './store/mutations/mutations'
 
 // 测试使用
 // import './assets/styles/test.css'
@@ -18,6 +19,30 @@ Vue.use(Vuex)
 
 const router = createRouter()
 const store = createStore()
+
+// 动态注册模块
+store.registerModule('c', {
+  state: {
+    text: 3
+  }
+})
+
+// 解绑注册模块
+// store.unregisterModule('c')
+
+// store.watch((state) => state.count + 1, (newCount) => { // store.watch接受2各参数，必须是方法
+//   console.log('new count watched:', newCount)
+// })
+
+// store.subscribe((mutations, state) => {
+//   console.log('subscribe-mutations.type:', mutations.type)
+//   console.log('subscribe-mutations.payload:', mutations.payload)
+// }) // 任何mutations被调用的时候，都可以拿到回调，在回调里做记录
+
+store.subscribeAction((action, state) => {
+  console.log('subscribeAction-action.type:', action.type)
+  console.log('subscribeAction-action.payload:', action.payload)
+}) // 任何action被调用的时候，都可以拿到回调(命名空间里的时undefined？)
 
 // 直接设置根节点
 // const root = document.createElement('div')

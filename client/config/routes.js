@@ -1,5 +1,5 @@
-import Todo from '../views/todo/todo.vue'
-import Login from '../views/login/login.vue'
+// import Todo from '../views/todo/todo.vue'
+// import Login from '../views/login/login.vue'
 
 export default [
   {
@@ -14,8 +14,8 @@ export default [
     //   id: '456'
     // }, // 指定props传递内容,会覆盖传参,建议使用props：true
     // props: (route) => ({id: true.query.b}), // 拿到query，项目中用不到，暂时注释
-    component: Todo,
-    // component: () => import(/* webpackChunkName: "todo-view" */ '../views/todo/todo.vue'),
+    // component: Todo,
+    component: () => import(/* webpackChunkName: "todo-view" */ '../views/todo/todo.vue'),
     name: 'app',
     meta: {
       title: 'this is app',
@@ -34,8 +34,8 @@ export default [
   },
   {
     path: '/login',
-    // component: () => import(/* webpackChunkName: "login-view" */ '../views/login/login.vue')
-    component: Login
+    component: () => import(/* webpackChunkName: "login-view" */ '../views/login/login.vue')
+    // component: Login
     // components: {
     //   default: Login,
     //   a: Todo
