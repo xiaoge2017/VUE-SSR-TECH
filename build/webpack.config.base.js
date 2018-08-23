@@ -5,10 +5,11 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
   target: 'web',
-  entry: path.join(__dirname,'../client/index.js'),
+  entry: path.join(__dirname, '../client/index.js'),
   output: {
     filename: 'bundle[hash:8].js',
-    path: path.join(__dirname, '../dist')
+    path: path.join(__dirname, '../dist'),
+    publicPath: '/public/'
   },
   module: {
     rules: [
@@ -24,11 +25,11 @@ const config = {
         options: createVueLoaderOptions(isDev)
       },
       {
-        test: /\.jsx/,
+        test: /\.jsx$/,
         loader: 'babel-loader'
       },
       {
-        test: /\.js/,
+        test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       },

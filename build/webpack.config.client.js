@@ -13,38 +13,43 @@ const defaultPlugins = [
       NODE_ENV: isDev ? '"development"' : '"production"'
     }
   }),
-  new HTMLPlugin()
+  new HTMLPlugin({
+    template: path.join(__dirname, 'template.html')
+  })
 ]
 const devServer = {
   port: 8000,
   host: '0.0.0.0',
   overlay: {
-    errors: true,
+    errors: true
   },
+  historyApiFallback: {
+    index: '/public/index.html'
+  }, // 服务端请求404解决，和webpack.config.base.js的output.pubilcPath有一定关系
   hot: true // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
 }
 let config
 
 if (isDev) {
-  config=merge(baseConfig, {
-    devtool:'#cheap-module-eval-source-map',
-    module:{
-      rules:[
+  config = merge(baseConfig, {
+    devtool: '#cheap-module-eval-source-map',
+    module: {
+      rules: [
         {
           test: /\.styl/,
           use: [
             'vue-style-loader', // vue-style-loader有热重载,style-loader
             {
-              loader:'css-loader',
-              options:{
-                module:true,
+              loader: 'css-loader',
+              options: {
+                module: true,
                 localIdentName: isDev ? '[path]-[name]-[hash:base64:5]' : '[hash:base64:5]'
               }
             },
             {
               loader: 'postcss-loader',
               options: {
-                sourceMap: true,
+                sourceMap: true
               }
             },
             'stylus-loader'
@@ -58,17 +63,17 @@ if (isDev) {
       new webpack.NoEmitOnErrorsPlugin() // 不需要信息展示的问题
     ])
   })
-} else{
-  config=merge(baseConfig, {
+} else {
+  config = merge(baseConfig, {
     entry: {
-      app: path.join(__dirname,'../client/index.js'),
+      app: path.join(__dirname, '../client/index.js'),
       vendor: ['vue']
     },
-    output:{
-      filename:'[name].[chunkhash:8].js'
+    output: {
+      filename: '[name].[chunkhash:8].js'
     },
-    module:{
-      rules:[
+    module: {
+      rules: [
         {
           test: /\.styl/,
           use: ExtractPlugin.extract({

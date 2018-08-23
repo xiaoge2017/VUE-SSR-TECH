@@ -7,7 +7,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
   target: 'web',
-  entry:path.join(__dirname,'src/index.js'),
+  entry: path.join(__dirname, 'src/index.js'),
   output: {
     filename: 'bundle[hash:8].js',
     path: path.join(__dirname, 'dist')
@@ -48,29 +48,28 @@ const config = {
 
 if (isDev) {
   config.module.rules.push({
-      test: /\.styl/,
-      use: [
-        'style-loader',
-        'css-loader',
-        {
-          loader: 'postcss-loader',
-          options: {
-            sourceMap: true,
-          }
-        },
-        'stylus-loader'
-      ]
+    test: /\.styl/,
+    use: [
+      'style-loader',
+      'css-loader',
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: true
+        }
+      },
+      'stylus-loader'
+    ]
   })
   config.devtool = '#cheap-module-eval-source-map' // 浏览器打开后，通过映射以编译后我们能看懂方式调整，source-map最完整映射关系，但是编译效率比较低，文件比较大，eval可能看起来会比较乱，出现行对应不齐的问题。而推荐的这个效率比较高
   config.devServer = {
     port: 8000,
     host: '0.0.0.0',
     overlay: {
-      errors: true,
+      errors: true
     },
     hot: true // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
     // historyFallback: {
-
     // }// 入口地址映射，(略)
     // open: true //启动后自动打开页面
   },
@@ -78,31 +77,29 @@ if (isDev) {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin() // 不需要信息展示的问题
   )
-} else{
+} else {
   config.entry = {
-    app: path.join(__dirname,'src/index.js'),
+    app: path.join(__dirname, 'src/index.js'),
     vendor: ['vue']
   }
   // config.output.filename = '[name].[hash:8].js'
   config.output.filename = '[name].[chunkhash:8].js'
-  config.module.rules.push(
-    {
-      test: /\.styl/,
-      use: ExtractPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          'stylus-loader'
-        ]
-      })
-    }  
-  ),
+  config.module.rules.push({
+    test: /\.styl/,
+    use: ExtractPlugin.extract({
+      fallback: 'style-loader',
+      use: [
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: true
+          }
+        },
+        'stylus-loader'
+      ]
+    })
+  }),
   config.plugins.push(
     new ExtractPlugin('styles.[contentHash:8].css'),
     new webpack.optimize.CommonsChunkPlugin({
