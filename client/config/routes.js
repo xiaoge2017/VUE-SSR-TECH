@@ -7,8 +7,8 @@ export default [
     redirect: '/app'
   },
   {
-    // path: '/app',
-    path: '/app/:id',
+    path: '/app',
+    // path: '/app/:id',
     props: true, // id传到Todo的组件里,
     // props: {
     //   id: '456'
@@ -16,11 +16,11 @@ export default [
     // props: (route) => ({id: true.query.b}), // 拿到query，项目中用不到，暂时注释
     // component: Todo,
     component: () => import(/* webpackChunkName: "todo-view" */ '../views/todo/todo.vue'),
-    name: 'app',
-    meta: {
-      title: 'this is app',
-      description: 'sadd'
-    } // 利于seo优化，具体在路由守卫里讲
+    name: 'app'
+    // meta: {
+    //   title: 'this is app',
+    //   description: 'sadd'
+    // } // 利于seo优化，具体在路由守卫里讲
     // beforeEnter (to, from, next) {
     //   console.log('app route before enter')
     //   next()

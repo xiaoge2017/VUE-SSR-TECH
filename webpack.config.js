@@ -10,7 +10,8 @@ const config = {
   entry: path.join(__dirname, 'src/index.js'),
   output: {
     filename: 'bundle[hash:8].js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'public')
+    // path: path.join(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -63,7 +64,7 @@ if (isDev) {
   })
   config.devtool = '#cheap-module-eval-source-map' // 浏览器打开后，通过映射以编译后我们能看懂方式调整，source-map最完整映射关系，但是编译效率比较低，文件比较大，eval可能看起来会比较乱，出现行对应不齐的问题。而推荐的这个效率比较高
   config.devServer = {
-    port: 8000,
+    port: 8008,
     host: '0.0.0.0',
     overlay: {
       errors: true

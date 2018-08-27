@@ -73,7 +73,7 @@ router.afterEach((to, from) => {
 
 // 通过模板设置根节点
 new Vue({
-  store,
   router,
+  store,
   render: (h) => h(App)
 }).$mount('#root')

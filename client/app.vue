@@ -6,6 +6,7 @@
         <p>getters:{{fullName}}</p>
         <p>命名空间:{{textA}}_{{textPlus}}</p>
         <p>注册模块:{{textC}}</p>
+        <button @click="notify">click me</button>
         <!-- <router-link :to="{name: 'app'}">app</router-link> -->
         <router-link to='/app/123'>app123</router-link>
         <router-link to='/app/456'>app456</router-link>
@@ -13,6 +14,7 @@
         <router-link to='/login'>login</router-link>
         <router-link to='/login/exact'>login exact1</router-link>
         <!-- <todo></todo> -->
+        <!-- <notification content = 'test notify'></notification> -->
         <transition name="fade">
           <router-view />
         </transition>
@@ -32,6 +34,9 @@ import Footer from './layout/footer.jsx'
 import Todo from './views/todo/todo.vue'
 
 export default {
+  metaInfo: {
+    title: 'Jock\'s Todo App'
+  },
   components: {
     Header, Footer, Todo
   },
@@ -68,7 +73,13 @@ export default {
   methods: {
     ...mapActions(['updateCountAsync', 'a/add', 'testAction']),
     // ...mapMutations(['updateCount', 'updateText']) // vuex会默认把所有的mutations放在全局中
-    ...mapMutations(['updateCount', 'a/updateText'])
+    ...mapMutations(['updateCount', 'a/updateText']),
+    notify () {
+      this.$notify({
+        content: 'test $notify',
+        btn: 'close'
+      })
+    }
   },
   computed: {
     // 便利引用

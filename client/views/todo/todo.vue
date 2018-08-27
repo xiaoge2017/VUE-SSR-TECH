@@ -1,8 +1,28 @@
 <template>
   <section class="real-app">
+    <div class="tab-container">
+      <tabs :value='filter' @change="handleChangeTab">
+        <tab :label='tab' :index='tab' v-for="tab in stats" :key='tab'>
+          <!-- <span>tab1 content{{inputContent}}</span> -->
+        </tab>
+      </tabs>
+      <!-- <tabs :value='tabValue' @change="handleChangeTab">
+        <tab label='tab1' index='1'>
+          <span>tab1 content{{inputContent}}</span>
+        </tab>
+        <tab index='2'>
+          <span slot="label" style="color:red">tab2</span>
+          <span>tab2 content</span>
+        </tab>
+        <tab label='tab1' index='3'>
+          <span>tab3 content</span>
+        </tab>
+      </tabs> -->
+    </div>
     <input
       type="text"
       class="add-input"
+      v-model="inputContent"
       autofocus='autofocus'
       placeholder="接下来要做什么"
       @keyup.enter="addTodo"
@@ -14,7 +34,7 @@
       @del="deleteTodo"
     />
     <!-- @keyup 也就等于 v-on:keyup -->
-    <tabs
+    <Helper
       :filter = 'filter'
       :todos="todos"
       @toggle='toggleFilter'
@@ -25,9 +45,12 @@
 </template>
 <script>
 import Item from './item.vue'
-import Tabs from './tabs.vue'
+import Helper from './helper.vue'
 let id = 0
 export default {
+  metaInfo: {
+    title: 'The Todo App'
+  },
   // 组件内部增加路由钩子
   beforeRouteEnter (to, from, next) {
     console.log('todo before enter', this)
@@ -51,7 +74,11 @@ export default {
   data () {
     return {
       todos: [],
-      filter: 'all'
+      filter: 'all',
+      // tabValue: '1',
+      tabValue: 'all',
+      // inputContent: '',
+      stats: ['all', 'active', 'completed']
     }
   },
   mounted () {
@@ -78,6 +105,10 @@ export default {
     },
     clearAllcompleted () {
       this.todos = this.todos.filter(todo => !todo.completed)
+    },
+    handleChangeTab (value) {
+      // this.tabValue = value
+      this.filter = value
     }
   },
   computed: {
@@ -91,7 +122,7 @@ export default {
     }
   },
   components: {
-    Item, Tabs
+    Item, Helper
   }
 }
 </script>
@@ -119,5 +150,9 @@ export default {
     cursor pointer
   }
 }
+/* .tab-container{
+  background #ffffff
+  padding 0 15px
+} */
 </style>
 

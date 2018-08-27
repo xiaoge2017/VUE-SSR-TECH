@@ -1,10 +1,11 @@
 const path = require('path')
-
 const HTMLPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const ExtractPlugin = require('extract-text-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
+const VueClientPlugin = require('vue-server-renderer/client-plugin')
+
 const isDev = process.env.NODE_ENV === 'development'
 
 const defaultPlugins = [
@@ -15,19 +16,23 @@ const defaultPlugins = [
   }),
   new HTMLPlugin({
     template: path.join(__dirname, 'template.html')
-  })
+  }),
+  new VueClientPlugin()
 ]
+
 const devServer = {
-  port: 8000,
+  port: 8008,
   host: '0.0.0.0',
   overlay: {
     errors: true
   },
+  headers: { 'Access-Control-Allow-Origin': '*' },
   historyApiFallback: {
     index: '/public/index.html'
-  }, // 服务端请求404解决，和webpack.config.base.js的output.pubilcPath有一定关系
+  }, // 服务端请求404解决，和webpack.config.base.js的output.publicPath有一定关系
   hot: true // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
 }
+
 let config
 
 if (isDev) {
@@ -38,14 +43,8 @@ if (isDev) {
         {
           test: /\.styl/,
           use: [
-            'vue-style-loader', // vue-style-loader有热重载,style-loader
-            {
-              loader: 'css-loader',
-              options: {
-                module: true,
-                localIdentName: isDev ? '[path]-[name]-[hash:base64:5]' : '[hash:base64:5]'
-              }
-            },
+            'vue-style-loader',
+            'css-loader',
             {
               loader: 'postcss-loader',
               options: {
@@ -66,11 +65,12 @@ if (isDev) {
 } else {
   config = merge(baseConfig, {
     entry: {
-      app: path.join(__dirname, '../client/index.js'),
+      app: path.join(__dirname, '../client/client-entry.js'),
       vendor: ['vue']
     },
     output: {
-      filename: '[name].[chunkhash:8].js'
+      filename: '[name].[chunkhash:8].js',
+      publicPath: '/public/'
     },
     module: {
       rules: [
@@ -95,13 +95,13 @@ if (isDev) {
     plugins: defaultPlugins.concat([
       new ExtractPlugin('styles.[contentHash:8].css'),
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'verdor'
+        name: 'vendor'
       }),
-      // 在有新的模块加入的时候，webpack是会给新模块加入id的，插入顺序不同，倒是id会变化，使用浏览器的缓存就是去效果，这种方式可以规避。verdor要放在runtime前面
       new webpack.optimize.CommonsChunkPlugin({
         name: 'runtime'
       })
     ])
   })
 }
+
 module.exports = config

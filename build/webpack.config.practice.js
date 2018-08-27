@@ -17,10 +17,13 @@ const defaultPlugins = [
   })
 ]
 const devServer = {
-  port: 8000,
+  port: 8008,
   host: '0.0.0.0',
   overlay: {
     errors: true
+  },
+  historyApiFallback: {
+    index: '/public/index.html'
   },
   hot: true // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
 }

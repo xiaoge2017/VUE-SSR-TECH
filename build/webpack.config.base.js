@@ -5,11 +5,11 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
   target: 'web',
-  entry: path.join(__dirname, '../client/index.js'),
+  entry: path.join(__dirname, '../client/client-entry.js'),
   output: {
-    filename: 'bundle[hash:8].js',
-    path: path.join(__dirname, '../dist'),
-    publicPath: '/public/'
+    filename: 'bundle.[hash:8].js',
+    path: path.join(__dirname, '../public'),
+    publicPath: 'http://127.0.0.1:8008/public/'
   },
   module: {
     rules: [
@@ -34,7 +34,7 @@ const config = {
         exclude: /node_modules/
       },
       {
-        test: /\.(gif|jpg|jepg|png|svg)$/,
+        test: /\.(gif|jpg|jpeg|png|svg)$/,
         use: [
           {
             loader: 'url-loader',

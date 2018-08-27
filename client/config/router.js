@@ -6,7 +6,7 @@ export default () => {
     routes,
     mode: 'history', // 去掉#号
     // base: '/base', // 在配置的所有路径都配置/base/(没有base也能显示，base路由不是强制的)
-    linkAcitiveClass: 'active-link',
+    linkActiveClass: 'active-link',
     linkExactActiveClass: 'exact-active-link-qqq', // exact 匹配模式
     scrollBehavior (to, from, savedPosition) {
       if (savedPosition) {
