@@ -30,7 +30,11 @@ const devServer = {
   historyApiFallback: {
     index: '/public/index.html'
   }, // 服务端请求404解决，和webpack.config.base.js的output.publicPath有一定关系
-  hot: true // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
+  hot: true, // 改了一个组件的代码，只重新渲染这个组件，不贵整个页面渲染
+  proxy: {
+    '/api': 'http://127.0.0.1:3333',
+    '/user': 'http://127.0.0.1:3333'
+  } // 联调时404报错：访问的地址是在3333上的，前端渲染的页面实在8000上，不同域
 }
 
 let config

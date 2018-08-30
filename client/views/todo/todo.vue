@@ -22,31 +22,55 @@
     <input
       type="text"
       class="add-input"
+      autofocus='autofocus'
+      placeholder="接下来要做什么"
+      @keyup.enter="handleAdd"
+    >
+    <!-- <input
+      type="text"
+      class="add-input"
+      autofocus='autofocus'
+      placeholder="接下来要做什么"
+      @keyup.enter="addTodo"
+    > -->
+    <!-- <input
+      type="text"
+      class="add-input"
       v-model="inputContent"
       autofocus='autofocus'
       placeholder="接下来要做什么"
       @keyup.enter="addTodo"
-    >
+    > -->
     <item
       :todo='todo'
-      v-for="todo in filterdTodos"
+      v-for="todo in filteredTodos"
       :key="todo.id"
       @del="deleteTodo"
+      @toggle ="toggleTodoState"
     />
     <!-- @keyup 也就等于 v-on:keyup -->
     <Helper
       :filter = 'filter'
       :todos="todos"
+      @clearAllcompleted="clearAllCompleted"
+    />
+    <!-- <Helper
+      :filter = 'filter'
+      :todos="todos"
       @toggle='toggleFilter'
       @clearAllcompleted="clearAllcompleted"
-    />
+    /> -->
     <router-view />
   </section>
 </template>
 <script>
+import {
+  mapState,
+  mapActions
+} from 'vuex'
 import Item from './item.vue'
 import Helper from './helper.vue'
-let id = 0
+// let id = 0
 export default {
   metaInfo: {
     title: 'The Todo App'
@@ -73,7 +97,7 @@ export default {
   props: ['id'], // 相当于和vue-rooter代码进行耦合
   data () {
     return {
-      todos: [],
+      // todos: [], // 联调就不需要了
       filter: 'all',
       // tabValue: '1',
       tabValue: 'all',
@@ -82,6 +106,7 @@ export default {
     }
   },
   mounted () {
+    this.fetchTodos()
     // console.log(this.id) // 打印id
     console.log('todo mounted') // 路由跳转时，两个参数不同，但是显示的内容是同一个组件时，第二次路由不会被触发
   },
@@ -89,30 +114,58 @@ export default {
   //   id
   // }, // 监听很麻烦
   methods: {
-    addTodo (e) {
-      this.todos.unshift({
-        id: id++,
-        content: e.target.value.trim(),
+    ...mapActions(['fetchTodos', 'addTodo', 'deleteTodo', 'updateTodo', 'deleteAllCompleted']),
+    handleAdd (e) {
+      const content = e.target.value.trim()
+      if (!content) {
+        this.$notify({
+          content: '必须输入要做的内容'
+        })
+        return
+      }
+      const todo = {
+        content,
         completed: false
-      })
+      }
+      this.addTodo(todo)
       e.target.value = ''
     },
-    deleteTodo (id) {
-      this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
+    // addTodo (e) {
+    //   this.todos.unshift({
+    //     id: id++,
+    //     content: e.target.value.trim(),
+    //     completed: false
+    //   })
+    //   e.target.value = ''
+    // },
+    // deleteTodo (id) {
+    //   this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1)
+    // },
+    // toggleFilter (state) {
+    //   this.filter = state
+    // },
+    toggleTodoState (todo) {
+      this.updateTodo({
+        id: todo.id,
+        todo: Object.assign({}, todo, {
+          completed: !todo.completed
+        })
+      })
     },
-    toggleFilter (state) {
-      this.filter = state
+    clearAllCompleted () {
+      this.deleteAllCompleted()
     },
-    clearAllcompleted () {
-      this.todos = this.todos.filter(todo => !todo.completed)
-    },
+    // clearAllcompleted () {
+    //   this.todos = this.todos.filter(todo => !todo.completed),
+    // },
     handleChangeTab (value) {
       // this.tabValue = value
       this.filter = value
     }
   },
   computed: {
-    filterdTodos () {
+    ...mapState(['todos']),
+    filteredTodos () {
       if (this.filter === 'all') {
         return this.todos
       }
